@@ -6,6 +6,7 @@ import (
 	"crypto/rsa"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"testing"
 )
 
@@ -86,6 +87,5 @@ func TestSign(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to sign data: %v", err)
 	}
-	fmt.Printf("Signed data:\n%s\n", string(signed))
-
+	log.Printf("Signed data:\n%s\n", base64.StdEncoding.EncodeToString(signed))
 }
