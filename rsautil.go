@@ -29,7 +29,7 @@ func GenerateKeyPair(bits RSABits) (*rsa.PrivateKey, *rsa.PublicKey, error) {
 }
 
 // PrivateKeyToBytes dumps private key to bytes
-func PrivateKeyToBytes(priv *rsa.PrivateKey) []byte {
+func PrivateKeyBytes(priv *rsa.PrivateKey) []byte {
 	privBytes := pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "RSA PRIVATE KEY",
@@ -40,7 +40,7 @@ func PrivateKeyToBytes(priv *rsa.PrivateKey) []byte {
 }
 
 // PublicKeyToBytes public key to bytes
-func PublicKeyToBytes(pub *rsa.PublicKey) ([]byte, error) {
+func PublicKeyBytes(pub *rsa.PublicKey) ([]byte, error) {
 	pubASN1, err := x509.MarshalPKIXPublicKey(pub)
 	if err != nil {
 		return nil, err
@@ -106,6 +106,16 @@ func EncryptWithPublicKey(msg []byte, pub *rsa.PublicKey) ([]byte, error) {
 	return ciphertext, nil
 }
 
+// DecryptWithPrivateKey decrypts data with private key
+func DecryptWithPrivateKey(ciphertext []byte, priv *rsa.PrivateKey) ([]byte, error) {
+	hash := sha512.New()
+	plaintext, err := rsa.DecryptOAEP(hash, rand.Reader, priv, ciphertext, nil)
+	if err != nil {
+		return nil, err
+	}
+	return plaintext, nil
+}
+
 // Sign signs data with Private key
 func Sign(msg []byte, priv *rsa.PrivateKey) ([]byte, error) {
 	hashed := sha256.Sum256(msg)
@@ -115,14 +125,4 @@ func Sign(msg []byte, priv *rsa.PrivateKey) ([]byte, error) {
 		return nil, err
 	}
 	return ciphertext, nil
-}
-
-// DecryptWithPrivateKey decrypts data with private key
-func DecryptWithPrivateKey(ciphertext []byte, priv *rsa.PrivateKey) ([]byte, error) {
-	hash := sha512.New()
-	plaintext, err := rsa.DecryptOAEP(hash, rand.Reader, priv, ciphertext, nil)
-	if err != nil {
-		return nil, err
-	}
-	return plaintext, nil
 }

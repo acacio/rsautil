@@ -15,10 +15,10 @@ func TestGenKey(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to generate key: %v", err)
 	}
-	ascpriv := string(PrivateKeyToBytes(priv))
+	ascpriv := string(PrivateKeyBytes(priv))
 	fmt.Printf("Private key:\n%s\n", ascpriv)
 
-	ascpub, err := PublicKeyToBytes(pub)
+	ascpub, err := PublicKeyBytes(pub)
 	if err != nil {
 		t.Errorf("Failed to encode public key: %v", err)
 	}
@@ -30,7 +30,7 @@ func TestKeyRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to generate key: %v", err)
 	}
-	ascpriv := PrivateKeyToBytes(priv)
+	ascpriv := PrivateKeyBytes(priv)
 	//fmt.Printf("Private key:\n%s\n", string(ascpriv))
 
 	newpriv, err := BytesToPrivateKey(ascpriv)
@@ -77,7 +77,7 @@ func TestSign(t *testing.T) {
 		t.Errorf("Failed to generate key: %v", err)
 	}
 
-	ascpriv := string(PrivateKeyToBytes(priv))
+	ascpriv := string(PrivateKeyBytes(priv))
 	fmt.Printf("Private key:\n%s\n", ascpriv)
 	data := make([]byte, 512, 512)
 	rand.Read(data)
